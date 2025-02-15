@@ -1,0 +1,12 @@
+{
+    "token": "Your telegram bot token",
+    "owner": "Telegram id of owner(it must be Number and not string)",
+    "dataChannel": "Your data channel id(don`t forget -100 in start, it must be Number and not string)",
+    "errChannel": "Your errors channel id(don`t forget -100 in start, it must be Number and not string)",
+    "school": "Your school name",
+    "domain": "Your webuntis server domain",
+    "dbname": "Your mysql DB name",
+    "host": "Your mysql host",
+    "user": "Your mysql username",
+    "password": "Your mysql password"
+}

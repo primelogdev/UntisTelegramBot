@@ -1,0 +1,98 @@
+{
+    "menu": {
+        "welcome": "Willkommen, {{firstName}}!\n\nUm mit dem Bot zu interagieren, verwenden Sie die folgenden Tasten oder die Befehle (Vollständiges Blatt /help).",
+        "buttons": {
+            "timetable": "🗓Stundenplan",
+            "homework": "📚HA",
+            "profile": "🪪Profil",
+            "settings": "⚙️Einstellungen",
+            "text": "📱Menü"
+        }
+    },
+    "timetable": {
+        "header": "🗓Stundenplan für",
+        "today": "heute",
+        "no_lessons": "Heute kein Unterricht ➖\nEntspannen Sie sich.",
+        "active": "Aktiv",
+        "canceled": "Entfall",
+        "lesson": {
+            "time": "🕓Zeit:",
+            "teacher": "👨‍🏫Lehrer:",
+            "subject": "📖Fach:",
+            "room": "🔢Raum:",
+            "status": "❗️Status:"
+        },
+        "buttons": {
+            "week_view": "📖Zur Wochenansicht",
+            "day_view": "📖Zur Tagesansicht",
+            "prev": "◀️Vorheriger Tag",
+            "next": "▶️Nächster Tag"
+        },
+        "error": "❌Datumsanfrage: {{date}}\n\nZu weit vom heutigen Datum entfernt! Der Server hat kein Ergebnis zurückgegeben! Um den heutigen Fahrplan zu erhalten, verwenden Sie /timetable.",
+        "week": {
+            "unavailable": "Die Wochenansicht ist derzeit nicht verfügbar!"
+        }
+    },
+    "profile": {
+        "header": "Profil\n\nName: {{name}}",
+        "buttons": {
+            "back": "Zurück"
+        }
+    },
+    "settings": {
+        "no_info": "Keine Daten.",
+        "header": "⚙️Einstellungen:",
+        "untis_data": "📔Untis data:",
+        "language": "🌎Sprache:",
+        "notifications": "🔔Benachrichtigungen:",
+        "on": "🟢An.",
+        "off": "🔴Aus.",
+        "buttons": {
+            "language": "🌎Language",
+            "notifications": "🔔Benachrichtigungen",
+            "untis_data": "🪪Untis",
+            "back": "Zurück"
+        },
+        "notifications_prompt": {
+            "enable": "Benachrichtigungen aktivieren?",
+            "disable": "Benachrichtigungen deaktivieren?",
+            "buttons": {
+                "enable": "🟢Aktivieren.",
+                "disable": "🔴Deaktivieren."
+            }
+        }
+    },
+    "untis_data": {
+        "head": "👤*Untis profil:*",
+        "isInfo": "\n\nBenutzername: {{data.uname}}\nPasswort: {{data.pass}}\nStatus: ",
+        "noInfo": "\n\nKeine Informationen!",
+        "valid": "Daten sind gültig.",
+        "invalid": "Die Daten sind ungültig.\nWir löschen Ihre Daten aus der DB und dem Kanal und Sie müssen gültige Daten eingeben.",
+        "ChangeData": "✏️Daten ändern",
+        "RmData": "➖Daten entfernen",
+        "success": "*Daten geändert!*\nUsername: {{username}}\nPassword: {{pass}}",
+        "login": "*Geben Sie Ihr Login ein:*",
+        "pass": "*Geben Sie nun Ihr Passwort ein:*"
+    },
+    "errors": {
+        "ChangeData": "⛔️*Ihre Daten sind ungültig!*\nKehren Sie zum Menü zurück und versuchen Sie es erneut.",
+        "login": "⛔️*Ungültige Daten!*\nWir löschen Ihre Daten aus der DB und dem Kanal und Sie müssen gültige Daten eingeben.",
+        "info": "⛔️Unbekannter Fehler beim Abrufen der Informationen.",
+        "fetch_timetable": "⛔️Unbekannter Fehler beim Abrufen des Stundenplans:",
+        "user_not_found": "❗️Benutzer nicht gefunden. Bitte registrieren Sie sich.",
+        "untis_credentials_required": "❗️Bitte füllen Sie die Untis-Daten aus.",
+        "unknown_command": "❌Befehl nicht gefunden!",
+        "unknown_error": "⛔️Unbekannter Fehler:"
+    },
+    "general": {
+        "success": "✅Erfolgreich!",
+        "date_today": "heute",
+        "editDataFirst": "Bitte beenden Sie ändern der Daten, bevor Sie andere Funktionen verwenden.",
+        "nocommand": "Befehl nicht gefunden!"
+    },
+    "homeworks": {
+        "header": "📚Hausaufgaben für eine Woche:",
+        "lesson": "📖Fach:",
+        "teacher": "👨‍🏫Lehrer:"
+    }
+}

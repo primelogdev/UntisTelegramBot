@@ -1,0 +1,98 @@
+{
+  "menu": {
+    "welcome": "Welcome, {{firstName}}!\n\nTo interact with this bot use keys below,\nor commands (commands list /help).",
+    "buttons": {
+      "timetable": "🗓Timetable",
+      "homework": "📚HW",
+      "profile": "🪪Profile",
+      "settings": "⚙️Settings",
+      "text": "📱Menu"
+    }
+  },
+  "timetable": {
+    "header": "🗓Timetable for",
+    "today": "today",
+    "no_lessons": "No lessons today ➖\nRelax.",
+    "active": "Active",
+    "canceled": "Canceled",
+    "lesson": {
+      "time": "🕓Time:",
+      "teacher": "👨‍🏫Teacher:",
+      "subject": "📖Subject:",
+      "room": "🔢Room:",
+      "status": "❗️Status:"
+    },
+    "buttons": {
+      "week_view": "📖To week view",
+      "day_view": "📖To day view",
+      "prev": "◀️Previous day",
+      "next": "▶️Next day"
+    },
+    "error": "❌Request for date: {{date}}\n\nToo far from today's date! The server did not return any result! To get today's timetable use /timetable.",
+    "week": {
+      "unavailable": "Week view is not available now!"
+    }
+  },
+  "profile": {
+    "header": "Profile\n\nName: {{name}}",
+    "buttons": {
+      "back": "Back"
+    }
+  },
+  "settings": {
+    "no_info": "No data.",
+    "header": "⚙️Settings:",
+    "untis_data": "📔Untis data:",
+    "language": "🌎Language:",
+    "notifications": "🔔Notifications:",
+    "on": "🟢On.",
+    "off": "🔴Off.",
+    "buttons": {
+      "language": "🌎Language",
+      "notifications": "🔔Notifications",
+      "untis_data": "🪪Untis",
+      "back": "Back"
+    },
+    "notifications_prompt": {
+      "enable": "Enable notifications?",
+      "disable": "Diable notifications?",
+      "buttons": {
+        "enable": "🟢Enable.",
+        "disable": "🔴Disable."
+      }
+    }
+  },
+  "untis_data": {
+    "head": "👤*Untis profile:*",
+    "isInfo": "\n\nUsername: {{data.uname}}\nPassword: {{data.pass}}\nStatus: ",
+    "noInfo": "\n\nNo information!",
+    "valid": "Data is valid.",
+    "invalid": "Data is not valid.\nYour data will be deleted from channel and DB, so you need to provide us new valid data.",
+    "ChangeData": "✏️Change data",
+    "RmData": "➖Remove data",
+    "success": "*Data updated!*\nUsername: {{username}}\nPassword: {{pass}}",
+    "login": "*Enter your login:*",
+    "pass": "*Now enter your password:*"
+  },
+  "errors": {
+    "ChangeData": "⛔️*Your data is not valid!*\nReturn to menu and try again.",
+    "login": "⛔️*Failed to login!*\nYour data will be deleted from channel and DB, so you need to provide us new valid data.",
+    "info": "⛔️Unknown error when getting info.",
+    "fetch_timetable": "⛔️Unknown error when fetching timetable:",
+    "user_not_found": "❗️User not found. Pls, register.",
+    "untis_credentials_required": "❗️Pls fill the untis data.",
+    "unknown_command": "❌Command not found!",
+    "unknown_error": "⛔️Unknown error:"
+  },
+  "general": {
+    "success": "✅Successfully!",
+    "date_today": "today",
+    "editDataFirst": "Please finish editing the data before using other functions.",
+    "nocommand": "Command not found!"
+  },
+  "homeworks": {
+    "header": "📚Homewroks for a week:",
+    "lesson": "📖Subject:",
+    "teacher": "👨‍🏫Teacher:"
+  }
+}
