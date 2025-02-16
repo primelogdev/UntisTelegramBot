@@ -191,11 +191,11 @@ const CheckCanceles = async () => {
             database: config.dbname
         });
         const [results] = await connection.query(
-            `SELECT telegramid, msgid FROM users WHERE telegramid`
+            `SELECT telegramid, msgid, notif FROM users WHERE telegramid`
         );
         results.forEach(async (user) => {
             const msgid = user.msgid
-            if (msgid !== 0) {
+            if (msgid !== 0 && user.notif === 'yes') {
                 const sentMessage = await bot.sendMessage(dataChannel, '.', { reply_to_message_id: msgid }).catch(async () => {
                     await connection.query(
                         `UPDATE users SET msgid = ? WHERE telegramid = ?`, [0, user.telegramid]
@@ -208,38 +208,82 @@ const CheckCanceles = async () => {
                 try {
                     const untis = new api.WebUntis(school, username, password, domain);
                     await untis.login()
-                    const data = untis.getTimetableFor(new Date() + 1)
+                    const targetDate = new Date();
+                    targetDate.setDate(targetDate.getDate() + 3);
+                    const data = await untis.getOwnTimetableFor(targetDate);
                     const getCanceles = async () => {
-                        const canceledLessons = data.filter(lesson => lesson.code === 2);
+                        const canceledLessons = data.filter(lesson => lesson.code === 'canceled');
+                        const irregularLessons = data.filter(lesson => lesson.code === 'irregular');
 
-                        const result = canceledLessons.map(lesson => {
-                            const teacher = lesson.teachers[0]?.element;
-                            const room = lesson.rooms[0]?.element;
-                            const subject = lesson.subjects[0]?.element;
+                        const canceledResult = canceledLessons.map(lesson => {
+                            const teachers = lesson.te.map(teacher => ({
+                                shortName: teacher.name,
+                                fullName: teacher.longname
+                            }));
+
+                            const rooms = lesson.ro.map(room => ({
+                                shortName: room.name,
+                                fullName: room.longname
+                            }));
+
+                            const subjects = lesson.su.map(subject => ({
+                                shortName: subject.name,
+                                fullName: subject.longname
+                            }));
 
                             return {
                                 startTime: lesson.startTime,
                                 endTime: lesson.endTime,
-                                teacher: {
-                                    shortName: teacher?.name,
-                                    fullName: teacher?.longName
-                                },
-                                room: {
-                                    shortName: room?.name,
-                                    fullName: room?.longName
-                                },
-                                subject: {
-                                    shortName: subject?.name,
-                                    fullName: subject?.longName
-                                },
+                                teachers: teachers,
+                                rooms: rooms,
+                                subjects: subjects,
                                 date: lesson.date
                             };
                         });
-                        return result
+
+                        const irregularResult = irregularLessons.map(lesson => {
+                            const teachers = lesson.te.map(teacher => ({
+                                shortName: teacher.name,
+                                fullName: teacher.longname
+                            }));
+
+                            const rooms = lesson.ro.map(room => ({
+                                shortName: room.name,
+                                fullName: room.longname
+                            }));
+
+                            const subjects = lesson.su.map(subject => ({
+                                shortName: subject.name,
+                                fullName: subject.longname
+                            }));
+
+                            return {
+                                startTime: lesson.startTime,
+                                endTime: lesson.endTime,
+                                teachers: teachers,
+                                rooms: rooms,
+                                subjects: subjects,
+                                date: lesson.date
+                            };
+                        });
+                        canceledResult.forEach((lesson) => {
+                            bot.sendMessage(user.telegramid, `*У вас отменён урок ${formatDate(lesson.date)}:*\n${lesson.subjects[0].fullName}(${lesson.subjects[0].shortName})\n${formatTime(lesson.startTime)} - ${formatTime(lesson.endTime)}`, { parse_mode: "Markdown" })
+                        });
+                        irregularResult.forEach((lesson) => {
+                            let i = 0
+                            let data = ''
+                            lesson.teachers.forEach((teacher) => {
+                                i++
+                                data += `${teacher.fullName}(${teacher.shortName})${i === lesson.teachers.length ? '' : ', '}`
+                            })
+                            bot.sendMessage(user.telegramid, `*ℹ️У вас заменён урок ${formatDate(lesson.date)} в ${formatTime(lesson.startTime)} - ${formatTime(lesson.endTime)} на:*\n\n📔${lesson.subjects[0].fullName}(${lesson.subjects[0].shortName})\n🧑‍🏫${data}\n🔢${lesson.rooms[0].fullName}(${lesson.rooms[0].shortName})`, { parse_mode: "Markdown" })
+                        });
                     }
-                    bot.sendMessage(owner, await getCanceles())
+                    getCanceles()
                     connection.end()
                 } catch (e) {
+                    bot.sendMessage(owner, 'test')
+                    console.log(e)
                     bot.deleteMessage(dataChannel, msgid)
                     const connection = await mysql.createConnection({
                         host: config.host,
@@ -261,7 +305,8 @@ const CheckCanceles = async () => {
         return
     }
 }
-setInterval(CheckCanceles, 100);
+CheckCanceles()
+// setInterval(CheckCanceles, 100);
 // on messages
 bot.on('message', async (msg) => {
     const currentDate = new Date();
