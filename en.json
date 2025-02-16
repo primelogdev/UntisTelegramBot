@@ -94,5 +94,9 @@
     "header": "📚Homewroks for a week:",
     "lesson": "📖Subject:",
     "teacher": "👨‍🏫Teacher:"
+  },
+  "notifications": {
+    "substit": "*ℹ️ Your lesson on {lesson.date} from {lesson.startTime} to {lesson.endTime} has been substituted with:*\n\n📔 {lesson.subjects[0].fullName} ({lesson.subjects[0].shortName})\n🧑‍🏫 {data}\n🔢 {lesson.rooms[0].fullName} ({lesson.rooms[0].shortName})",
+    "canceled": "*ℹ️ Your lesson on {lesson.date} from {lesson.startTime} to {lesson.endTime} has been canceled:*\n\n📔 {lesson.subjects[0].fullName} ({lesson.subjects[0].shortName})\n🧑‍🏫 {data}\n🔢 {lesson.rooms[0].fullName} ({lesson.rooms[0].shortName})"
   }
 }

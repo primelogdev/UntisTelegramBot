@@ -94,5 +94,9 @@
         "header": "📚Hausaufgaben für eine Woche:",
         "lesson": "📖Fach:",
         "teacher": "👨‍🏫Lehrer:"
-    }
+    },
+    "notifications": {
+        "substit": "*ℹ️ Ihre Unterrichtsstunde am {lesson.date} von {lesson.startTime} bis {lesson.endTime} wurde durch Folgendes ersetzt:*\n\n📔 {lesson.subjects[0].fullName} ({lesson.subjects[0].shortName})\n🧑‍🏫 {data}\n🔢 {lesson.rooms[0].fullName} ({lesson.rooms[0].shortName})",
+        "canceled": "*ℹ️ Ihre Unterrichtsstunde am {lesson.date} von {lesson.startTime} bis {lesson.endTime} wurde entfall:*\n\n📔 {lesson.subjects[0].fullName} ({lesson.subjects[0].shortName})\n🧑‍🏫 {data}\n🔢 {lesson.rooms[0].fullName} ({lesson.rooms[0].shortName})"
+      }
 }

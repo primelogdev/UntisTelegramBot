@@ -94,5 +94,9 @@
     "header": "📚Домашние задания на неделю:",
     "lesson": "📖Урок:",
     "teacher": "👨‍🏫Учитель:"
+  },
+  "notifications": {
+    "substit": "*ℹ️У вас заменён урок {lesson.date} в {lesson.startTime} - {lesson.endTime} на:*\n\n📔 {lesson.subjects[0].fullName}({lesson.subjects[0].shortName})\n🧑‍🏫 {data}\n🔢 {lesson.rooms[0].fullName}({lesson.rooms[0].shortName})",
+    "canceled": "*ℹ️У вас отменён урок {lesson.date} в {lesson.startTime} - {lesson.endTime}:*\n\n📔 {lesson.subjects[0].fullName}({lesson.subjects[0].shortName})\n🧑‍🏫 {data}\n🔢 {lesson.rooms[0].fullName}({lesson.rooms[0].shortName})"
   }
 }

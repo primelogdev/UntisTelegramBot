@@ -4,7 +4,6 @@ const mysql = require('mysql2/promise');
 const TelegramBot = require('node-telegram-bot-api');
 const dateTools = require('date-fns')
 const config = require('./config.json');
-const data = require("./week.json");
 
 const ru = require('./ru.json');
 const en = require('./en.json');
@@ -21,6 +20,7 @@ const domain = config.domain;
 
 // Functions && Variables
 const isChanging = []
+const prevData = {}
 const bot = new TelegramBot(config.token, { polling: true });
 const menuButton = (lang) => [{ text: `${lang.menu.buttons.text}`, callback_data: 'menu' }]
 
@@ -191,7 +191,7 @@ const CheckCanceles = async () => {
             database: config.dbname
         });
         const [results] = await connection.query(
-            `SELECT telegramid, msgid, notif FROM users WHERE telegramid`
+            `SELECT telegramid, msgid, notif, lang FROM users WHERE telegramid`
         );
         results.forEach(async (user) => {
             const msgid = user.msgid
@@ -205,12 +205,16 @@ const CheckCanceles = async () => {
                 const parsedData = JSON.parse(sentMessage.reply_to_message.text)
                 const username = decrypt(parsedData.username);
                 const password = decrypt(parsedData.pass);
+                const userLang = user.lang === 'EN' ? en : user.lang === 'RU' ? ru : de
                 try {
                     const untis = new api.WebUntis(school, username, password, domain);
                     await untis.login()
-                    const targetDate = new Date();
-                    targetDate.setDate(targetDate.getDate() + 3);
-                    const data = await untis.getOwnTimetableFor(targetDate);
+                    const dates = [1, 2].map(offset => {
+                        const date = new Date();
+                        date.setDate(date.getDate() + offset);
+                        return date;
+                    });
+                    const data = (await Promise.all(dates.map(date => untis.getOwnTimetableFor(date)))).flat();
                     const getCanceles = async () => {
                         const canceledLessons = data.filter(lesson => lesson.code === 'canceled');
                         const irregularLessons = data.filter(lesson => lesson.code === 'irregular');
@@ -266,24 +270,37 @@ const CheckCanceles = async () => {
                                 date: lesson.date
                             };
                         });
+                        if (!prevData[user.telegramid]) {
+                            prevData[user.telegramid] = { canceled: {}, irregular: {} }
+                        }
                         canceledResult.forEach((lesson) => {
-                            bot.sendMessage(user.telegramid, `*У вас отменён урок ${formatDate(lesson.date)}:*\n${lesson.subjects[0].fullName}(${lesson.subjects[0].shortName})\n${formatTime(lesson.startTime)} - ${formatTime(lesson.endTime)}`, { parse_mode: "Markdown" })
+                            if (!prevData[user.telegramid].canceled[lesson.startTime]) {
+                                prevData[user.telegramid].canceled[lesson.startTime] = true;
+                                let i = 0
+                                let data = ''
+                                lesson.teachers.forEach((teacher) => {
+                                    i++
+                                    data += `${teacher.fullName}(${teacher.shortName})${i === lesson.teachers.length ? '' : ', '}`
+                                })
+                                bot.sendMessage(user.telegramid, `${userLang.notifications.canceled.replace('{lesson.date}', formatDate(lesson.date)).replace('{lesson.startTime}', formatTime(lesson.startTime)).replace('{lesson.endTime}', formatTime(lesson.endTime)).replace('{lesson.subjects[0].fullName}', lesson.subjects[0].fullName).replace('{lesson.subjects[0].shortName}', lesson.subjects[0].shortName).replace('{data}', data).replace('{lesson.rooms[0].fullName}', lesson.rooms[0].fullName).replace('{lesson.rooms[0].shortName}', lesson.rooms[0].shortName)}`, { parse_mode: "Markdown" })
+                            }
                         });
                         irregularResult.forEach((lesson) => {
-                            let i = 0
-                            let data = ''
-                            lesson.teachers.forEach((teacher) => {
-                                i++
-                                data += `${teacher.fullName}(${teacher.shortName})${i === lesson.teachers.length ? '' : ', '}`
-                            })
-                            bot.sendMessage(user.telegramid, `*ℹ️У вас заменён урок ${formatDate(lesson.date)} в ${formatTime(lesson.startTime)} - ${formatTime(lesson.endTime)} на:*\n\n📔${lesson.subjects[0].fullName}(${lesson.subjects[0].shortName})\n🧑‍🏫${data}\n🔢${lesson.rooms[0].fullName}(${lesson.rooms[0].shortName})`, { parse_mode: "Markdown" })
+                            if (!prevData[user.telegramid].irregular[lesson.startTime]) {
+                                prevData[user.telegramid].irregular[lesson.startTime] = true;
+                                let i = 0
+                                let data = ''
+                                lesson.teachers.forEach((teacher) => {
+                                    i++
+                                    data += `${teacher.fullName}(${teacher.shortName})${i === lesson.teachers.length ? '' : ', '}`
+                                })
+                                bot.sendMessage(user.telegramid, `${userLang.notifications.substit.replace('{lesson.date}', formatDate(lesson.date)).replace('{lesson.startTime}', formatTime(lesson.startTime)).replace('{lesson.endTime}', formatTime(lesson.endTime)).replace('{lesson.subjects[0].fullName}', lesson.subjects[0].fullName).replace('{lesson.subjects[0].shortName}', lesson.subjects[0].shortName).replace('{data}', data).replace('{lesson.rooms[0].fullName}', lesson.rooms[0].fullName).replace('{lesson.rooms[0].shortName}', lesson.rooms[0].shortName)}`, { parse_mode: "Markdown" })
+                            }
                         });
                     }
                     getCanceles()
-                    connection.end()
                 } catch (e) {
-                    bot.sendMessage(owner, 'test')
-                    console.log(e)
+                    bot.sendMessage(errChannel, `Error:\n${e.message}`)
                     bot.deleteMessage(dataChannel, msgid)
                     const connection = await mysql.createConnection({
                         host: config.host,
@@ -299,14 +316,17 @@ const CheckCanceles = async () => {
                 }
             }
         });
+        connection.end()
     } catch (e) {
 
     } finally {
         return
     }
 }
+
 CheckCanceles()
-// setInterval(CheckCanceles, 100);
+setInterval(CheckCanceles, 3600000);
+setInterval(() => Object.assign(prevData, {}), 86400000)
 // on messages
 bot.on('message', async (msg) => {
     const currentDate = new Date();
@@ -346,10 +366,6 @@ bot.on('message', async (msg) => {
                 `SELECT lang FROM users WHERE telegramid = ?`, [chatId]
             );
             lang = DBinfo[0]?.lang;
-            const isTester = results[0].isTester
-            if (!isTester) {
-                return
-            }
             if (lang === null) {
                 if (/^\/lang( (.+))?$/.test(msg.text)) {
                     Lang(chatId, msg)
@@ -568,10 +584,6 @@ bot.on('callback_query', async (callbackQuery) => {
             `SELECT lang FROM users WHERE telegramid = ?`, [chatId]
         );
         lang = DBinfo[0]?.lang;
-        const isTester = results[0].isTester
-        if (!isTester) {
-            return
-        }
         if (lang === null) {
             if (callbackQuery.data === 'RU') {
                 await connection.query(

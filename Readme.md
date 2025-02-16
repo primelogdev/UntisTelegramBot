@@ -22,7 +22,7 @@ To install UntisBot, follow these steps:
 1. Clone the repository: `git clone https://github.com/primelogdev/UntisTelegramBot.git `
 2. Navigate to the project directory: `cd UntisTelegramBot`
 3. Install the required dependencies: `npm i`
-4. Set up your Telegram bot token and other configurations in the `config.jspn` file.
+4. Set up your Telegram bot token and other configurations in the `config.json` file.
 5. Set up encrypter maps in the `./encrypter/maps.js`.(optionaly)
 6. Run the bot: `node bot.js`
 
