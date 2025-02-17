@@ -1,6 +1,6 @@
 # UntisBot
 
-UntisBot is a Telegram bot designed to help you stay updated with your school schedule. It provides various features to ensure you never miss an important update.
+UntisBot is a multiple language(Russian, English, German) Telegram bot designed to help you stay updated with your school Timelible. It provides various features to ensure you never miss an important update like checking every hour timetable for two days ahead and notifing you if there is new canceled or substituted classes.
 
 ## Features
 
@@ -29,8 +29,16 @@ To install UntisBot, follow these steps:
 ## Usage
 
 Once the bot is running, you can interact with it through Telegram. Use the following commands to get started:
+
+Users and admin:
 - `/start` - Start the bot and get a welcome message with buttons(Timetible, homework, settiongs, untis login data).
 - `/lang` - Sending a message to select a language.  
+
+Only admin: 
+- `/sendall` - Asks you to provide a message to send and then sands it to all users.
+- `/sendall (message)` - sends all users (message).
+- `/getallusers` - provides list of telegram ids of all users.
+- `/getallusers data` - provides list of users with their data(without untis passwords and usernames of course).
 
 ## Contributing
 

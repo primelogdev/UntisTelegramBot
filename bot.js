@@ -274,8 +274,8 @@ const CheckCanceles = async () => {
                             prevData[user.telegramid] = { canceled: {}, irregular: {} }
                         }
                         canceledResult.forEach((lesson) => {
-                            if (!prevData[user.telegramid].canceled[lesson.startTime]) {
-                                prevData[user.telegramid].canceled[lesson.startTime] = true;
+                            if (!prevData[user.telegramid].canceled[`${lesson.date}(${lesson.startTime})`]) {
+                                prevData[user.telegramid].canceled[`${lesson.date}(${lesson.startTime})`] = true;
                                 let i = 0
                                 let data = ''
                                 lesson.teachers.forEach((teacher) => {
@@ -286,8 +286,8 @@ const CheckCanceles = async () => {
                             }
                         });
                         irregularResult.forEach((lesson) => {
-                            if (!prevData[user.telegramid].irregular[lesson.startTime]) {
-                                prevData[user.telegramid].irregular[lesson.startTime] = true;
+                            if (!prevData[user.telegramid].irregular[`${lesson.date}(${lesson.startTime})`]) {
+                                prevData[user.telegramid].irregular[`${lesson.date}(${lesson.startTime})`] = true;
                                 let i = 0
                                 let data = ''
                                 lesson.teachers.forEach((teacher) => {
@@ -329,6 +329,9 @@ setInterval(CheckCanceles, 3600000);
 setInterval(() => Object.assign(prevData, {}), 86400000)
 // on messages
 bot.on('message', async (msg) => {
+    if (config.onlyOwner && msg.chat.id !== owner) {
+        return
+    }
     const currentDate = new Date();
     const currentTimestamp = Date.now()
     const chatId = msg.chat.id;
@@ -553,6 +556,9 @@ bot.on('message', async (msg) => {
 // on callback
 
 bot.on('callback_query', async (callbackQuery) => {
+    if (config.onlyOwner && callbackQuery.message.chat.id !== owner) {
+        return
+    }
     let currentDate = new Date();
     let currentTimestamp = Date.now()
     const msg = callbackQuery.message;

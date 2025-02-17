@@ -8,5 +8,6 @@
     "dbname": "Your mysql DB name",
     "host": "Your mysql host",
     "user": "Your mysql username",
-    "password": "Your mysql password"
+    "password": "Your mysql password",
+    "onlyOwner": "true if you want to allow to use this bot only for owner or false it you want to allow to use it for all"
 }
